@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Invitation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fdf5f5;
+            --primary: #ff3366;
+            --primary-dark: #d62252;
+            --black: #1a1a1a;
+            --gray: #666;
+            --rubber-shadow: 0 10px 0px rgba(0,0,0,0.05);
+            --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: crosshair;
+        }
+
+        /* Kinetic Background Elements */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.4;
+            animation: float 20s infinite alternate var(--ease-elastic);
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(10vw, 5vh) scale(1.2); }
+        }
+
+        #main-container {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 10vw, 5rem);
+            color: var(--black);
+            line-height: 0.9;
+            margin-bottom: 2.5rem;
+            letter-spacing: -2px;
+            transition: transform 0.4s var(--ease-elastic);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            min-height: 200px;
+        }
+
+        .btn {
+            padding: 1.2rem 2.5rem;
+            border-radius: 100px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.5s var(--ease-elastic);
+            position: relative;
+            outline: none;
+            user-select: none;
+        }
+
+        .btn-yes {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 8px 0 var(--primary-dark), 0 15px 20px rgba(255, 51, 102, 0.3);
+            z-index: 50;
+        }
+
+        .btn-yes:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 var(--primary-dark), 0 5px 10px rgba(255, 51, 102, 0.3);
+        }
+
+        .btn-no {
+            background: #fff;
+            color: var(--black);
+            border: 2px solid var(--black);
+            box-shadow: 0 8px 0 var(--black);
+        }
+
+        .btn-no:active {
+            transform: scale(0.9) rotate(-5deg);
+        }
+
+        /* Result View */
+        #success-view {
+            display: none;
+            opacity: 0;
+            transform: translateY(50px) scale(0.9);
+            transition: all 0.8s var(--ease-elastic);
+            text-align: center;
+            padding: 2rem;
+        }
+
+        #success-view.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .gif-container {
+            width: 300px;
+            height: 300px;
+            border-radius: 40px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 8px solid white;
+            transform: rotate(-3deg);
+            animation: kinetic-bounce 4s infinite ease-in-out;
+        }
+
+        @keyframes kinetic-bounce {
+            0%, 100% { transform: rotate(-3deg) scale(1) translateY(0); }
+            50% { transform: rotate(3deg) scale(1.05) translateY(-20px); }
+        }
+
+        .gif-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .note {
+            font-family: 'Geist Mono', monospace;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 30px;
+            box-shadow: var(--rubber-shadow);
+            max-width: 500px;
+            color: var(--gray);
+            line-height: 1.6;
+            position: relative;
+            border-bottom: 5px solid #eee;
+        }
+
+        .note::before {
+            content: "♥";
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .sparkle {
+            position: absolute;
+            pointer-events: none;
+            animation: sparkle-anim 1s forwards;
+        }
+
+        @keyframes sparkle-anim {
+            0% { transform: translate(0,0) scale(0); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 0; }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="orb" style="width: 400px; height: 400px; background: #ffccd5; top: -10%; left: -10%;"></div>
+    <div class="orb" style="width: 300px; height: 300px; background: #ffe5ec; bottom: -5%; right: -5%;"></div>
+
+    <main id="main-container">
+        <h1 id="question">Will you be my Valentine?</h1>
+        <div class="button-group" id="actions">
+            <button class="btn btn-yes" id="yesBtn">Yes!</button>
+            <button class="btn btn-no" id="noBtn">No</button>
+        </div>
+    </main>
+
+    <div id="success-view">
+        <div class="gif-container">
+            <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHp1eXU2ZWhjNDB0amRhdGltZWU5Z3V6ZHB0N2ZqczYydnJ4Yng2ciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lTQF0ODLLjhza/giphy.gif" alt="Happy Cat">
+        </div>
+        <div class="note">
+            <p><strong>MISSION ACCOMPLISHED</strong></p>
+            <p style="margin-top: 10px;">I knew you'd say yes! You've made me the happiest person in the digital realm. Get ready for a day filled with laughter, snacks, and absolutely no "No" buttons.</p>
+            <p style="margin-top: 15px; font-weight: 800; color: var(--primary);">02 . 14 . 2026</p>
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const question = document.getElementById('question');
+        const mainContainer = document.getElementById('main-container');
+        const successView = document.getElementById('success-view');
+
+        let noCount = 0;
+        const phrases = [
+            "Are you sure?",
+            "Really sure??",
+            "Think again!",
+            "Last chance!",
+            "Surely not?",
+            "You might regret this!",
+            "Give it another thought!",
+            "Are you absolutely sure?",
+            "This could be a mistake!",
+            "Have a heart!",
+            "Don't be so cold!",
+            "Change of heart?",
+            "Wouldn't you reconsider?",
+            "Is that your final answer?",
+            "You're breaking my heart ;("
+        ];
+
+        function createSparkle(x, y) {
+            for(let i=0; i<8; i++) {
+                const s = document.createElement('div');
+                s.className = 'sparkle';
+                s.innerHTML = '✦';
+                s.style.color = '#ff3366';
+                s.style.left = x + 'px';
+                s.style.top = y + 'px';
+                s.style.setProperty('--tx', (Math.random()-0.5)*200 + 'px');
+                s.style.setProperty('--ty', (Math.random()-0.5)*200 + 'px');
+                document.body.appendChild(s);
+                setTimeout(() => s.remove(), 1000);
+            }
+        }
+
+        noBtn.addEventListener('click', () => {
+            noCount++;
+            
+            // Kinetic displacement
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+            
+            // Text morphing
+            noBtn.textContent = phrases[Math.min(noCount - 1, phrases.length - 1)];
+            
+            // Squishy scaling
+            const yesScale = 1 + (noCount * 0.15);
+            yesBtn.style.transform = `scale(${yesScale})`;
+            
+            const noScale = Math.max(0.6, 1 - (noCount * 0.05));
+            noBtn.style.transform = `scale(${noScale})`;
+
+            // Subtle rubber vibration on question
+            question.style.transform = `scale(${1 + (noCount * 0.02)}) rotate(${(Math.random()-0.5)*5}deg)`;
+        });
+
+        yesBtn.addEventListener('click', (e) => {
+            createSparkle(e.clientX, e.clientY);
+            
+            mainContainer.style.display = 'none';
+            successView.classList.add('active');
+            
+            // Celebrate
+            for(let i=0; i<50; i++) {
+                setTimeout(createConfetti, i * 50);
+            }
+        });
+
+        function createConfetti() {
+            const c = document.createElement('div');
+            c.className = 'confetti';
+            c.style.left = Math.random() * 100 + 'vw';
+            c.style.top = '-20px';
+            c.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+            c.style.transform = `rotate(${Math.random() * 360}deg)`;
+            document.body.appendChild(c);
+
+            const anim = c.animate([
+                { transform: `translate3d(0, 0, 0) rotate(0deg)`, opacity: 1 },
+                { transform: `translate3d(${(Math.random()-0.5)*200}px, 100vh, 0) rotate(${Math.random()*1000}deg)`, opacity: 0 }
+            ], {
+                duration: 2000 + Math.random() * 3000,
+                easing: 'cubic-bezier(0, .9, .57, 1)'
+            });
+
+            anim.onfinish = () => c.remove();
+        }
+
+        // Mouse follow effect for the rubber background
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 20;
+            const y = (e.clientY / window.innerHeight - 0.5) * 20;
+            document.querySelectorAll('.orb').forEach((orb, i) => {
+                const factor = (i + 1) * 0.5;
+                orb.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
+
